@@ -1,0 +1,1 @@
+export const EXAM_COOLDOWN_SECONDS = 60;

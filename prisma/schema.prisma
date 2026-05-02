@@ -1,0 +1,73 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model AccessCode {
+  code      String @id @unique // e.g., BAM-2026-X9F2
+  licenseId String
+
+  enrollments Enrollment[]
+  license     License      @relation(fields: [licenseId], references: [id])
+
+  @@map("access_codes")
+}
+
+model Enrollment {
+  id            String    @id @default(cuid())
+  accessCodeId  String
+  courseId      String
+  status        Status    @default(NOT_STARTED)
+  startedAt     DateTime?
+  completedAt   DateTime?
+  progressData  Json? // Optional MVP tracking (xAPI ready)
+  auditLogs     Json? // Logs of exam answers for legal proof
+  certDownloads Int       @default(0)
+
+  accessCode AccessCode @relation(fields: [accessCodeId], references: [code])
+  course     Course     @relation(fields: [courseId], references: [id])
+
+  @@unique([accessCodeId, courseId]) // A code can only enroll in a specific course once
+  @@map("enrollments")
+}
+
+model Course {
+  id      String     @id // e.g., sam_02
+  title   String
+  type    CourseType
+  content Json // Structure of modules and examination
+
+  enrollments Enrollment[]
+  licenses    License[]
+
+  @@map("courses")
+}
+
+model License {
+  id           String   @id @default(cuid())
+  companyName  String
+  totalCodes   Int
+  usedCodes    Int      @default(0)
+  dashboardKey String   @unique @default(cuid())
+  createdAt    DateTime @default(now())
+  courseId     String
+
+  course      Course       @relation(fields: [courseId], references: [id])
+  accessCodes AccessCode[]
+
+  @@map("licenses")
+}
+
+enum Status {
+  NOT_STARTED
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum CourseType {
+  ONLINE
+  HYBRID
+}
