@@ -10,7 +10,7 @@ function getKey() {
   return new TextEncoder().encode(secretKey);
 }
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const url = request.nextUrl.clone();
   
   // 1. Preview Lock Logic
