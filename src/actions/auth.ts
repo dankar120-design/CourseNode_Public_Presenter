@@ -10,7 +10,8 @@ export async function loginWithCode(accessCode: string) {
   try {
     const code = accessCode.toUpperCase()
     
-    const isDemoCode = code.startsWith('DEMO-');
+    const allowedDemoCodes = ['DEMO-COMPLIANCE', 'DEMO-SEC'];
+    const isDemoCode = allowedDemoCodes.includes(code);
     
     // Auto-provision demo codes into the database to ensure White-Label Demo works on any connected DB
     if (isDemoCode) {
@@ -66,7 +67,7 @@ export async function loginWithCode(accessCode: string) {
     })
 
     if (!enrollment) {
-      return { error: 'Ogiltig åtkomstkod eller ingen kurs tilldelad.' }
+      return { error: 'Invalid access code or no course assigned.' }
     }
 
     // Återställning av demo-konton om DEMO_MODE är aktivt (för säljare/testning)
@@ -113,7 +114,7 @@ export async function loginWithCode(accessCode: string) {
     return { success: true }
   } catch (error) {
     console.error('Login error:', error)
-    return { error: 'Ett oväntat fel inträffade.' }
+    return { error: 'An unexpected error occurred.' }
   }
 }
 

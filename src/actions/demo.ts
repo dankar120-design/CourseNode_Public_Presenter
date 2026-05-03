@@ -24,7 +24,7 @@ export async function resetDemoProgress() {
     })
 
     if (!enrollment) {
-      return { error: 'Kunde inte hitta kursanmälan.' }
+      return { error: 'Could not find course enrollment.' }
     }
 
     // Reset status and progressData
@@ -40,6 +40,6 @@ export async function resetDemoProgress() {
     return { success: true }
   } catch (error) {
     console.error('Demo reset error:', error)
-    return { error: 'Ett serverfel inträffade vid nollställning.' }
+    return { error: 'A server error occurred during reset.' }
   }
 }

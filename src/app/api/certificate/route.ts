@@ -51,7 +51,7 @@ export async function GET(request: NextRequest) {
       const bgImage = await pdfDoc.embedPng(bgImageBytes);
       page.drawImage(bgImage, { x: 0, y: 0, width, height });
     } catch (e) {
-      console.error('Kunde inte ladda bakgrundsbild för certifikat:', e);
+      console.error('Could not load background image for certificate:', e);
       page.drawRectangle({ x: 0, y: 0, width, height, color: rgb(0.97, 0.98, 0.99) });
     }
 
@@ -70,9 +70,9 @@ export async function GET(request: NextRequest) {
     const validityYears = overrides.validityYears ? Number(overrides.validityYears) : null;
 
     drawCenteredText(certTitle, 420, 42, helveticaFont, rgb(0.05, 0.15, 0.25));
-    drawCenteredText('Härmed intygas att', 340, 18, helveticaRegular);
+    drawCenteredText('This is to certify that', 340, 18, helveticaRegular);
     drawCenteredText(safeName, 280, 36, helveticaFont, rgb(0.05, 0.15, 0.25));
-    drawCenteredText(`framgångsrikt har slutfört utbildningen: ${enrollment.course.title}`, 220, 16, helveticaRegular);
+    drawCenteredText(`has successfully completed the training: ${enrollment.course.title}`, 220, 16, helveticaRegular);
     
     // Dynamisk Y-layout för att förhindra textkollision (bättre andrum för texten)
     let currentY = 190;
@@ -85,22 +85,22 @@ export async function GET(request: NextRequest) {
     }
     
     const completionDate = enrollment.completedAt ? new Date(enrollment.completedAt) : new Date();
-    drawCenteredText(`Datum: ${completionDate.toLocaleDateString('sv-SE')}`, currentY, 16, helveticaRegular);
+    drawCenteredText(`Date: ${completionDate.toLocaleDateString('en-US')}`, currentY, 16, helveticaRegular);
     currentY -= 20;
     
     if (validityYears && !isNaN(validityYears)) {
       const validUntil = new Date(completionDate);
       validUntil.setFullYear(validUntil.getFullYear() + validityYears);
       // Fetstil (helveticaFont) är ett avsiktligt designval för att framhäva utgångsdatumet
-      drawCenteredText(`Giltigt till: ${validUntil.toLocaleDateString('sv-SE')}`, currentY, 12, helveticaFont, rgb(0.3, 0.35, 0.4));
+      drawCenteredText(`Valid until: ${validUntil.toLocaleDateString('en-US')}`, currentY, 12, helveticaFont, rgb(0.3, 0.35, 0.4));
       currentY -= 25;
     } else {
       currentY -= 15;
     }
 
-    drawCenteredText(`Utfärdat av: ${brandConfig.certificate.issuer}`, currentY, 14, helveticaFont, rgb(0.4, 0.45, 0.5));
+    drawCenteredText(`Issued by: ${brandConfig.certificate.issuer}`, currentY, 14, helveticaFont, rgb(0.4, 0.45, 0.5));
     currentY -= 25;
-    drawCenteredText(`Certifikat-ID (Pseudonym): ${enrollment.accessCodeId}`, currentY, 10, helveticaRegular, rgb(0.6, 0.6, 0.6));
+    drawCenteredText(`Certificate ID (Pseudonym): ${enrollment.accessCodeId}`, currentY, 10, helveticaRegular, rgb(0.6, 0.6, 0.6));
 
     const pdfBytes = await pdfDoc.save();
 

@@ -4,77 +4,77 @@ import Link from 'next/link';
 
 export default function PrivacyPage() {
   return (
-    <div className="min-h-screen bg-slate-50 py-12 px-4 sm:px-6 lg:px-8 flex flex-col items-center">
-      <div className="max-w-3xl w-full bg-white rounded-xl shadow-sm border border-slate-200 p-8 sm:p-12">
+    <div className="min-h-screen bg-background py-12 px-4 sm:px-6 lg:px-8 flex flex-col items-center">
+      <div className="max-w-3xl w-full bg-secondary rounded-xl shadow-sm border border-border p-8 sm:p-12">
         <div className="mb-8">
-          <Link href="/" className="text-sm text-slate-500 hover:text-slate-800 transition-colors flex items-center gap-2">
-            &larr; Tillbaka
+          <Link href="/" className="text-sm text-foreground/60 hover:text-primary transition-colors flex items-center gap-2">
+            &larr; Back
           </Link>
         </div>
         
-        <h1 className="text-3xl font-bold text-slate-800 mb-6">
-          Integritetspolicy & GDPR
+        <h1 className="text-3xl font-bold text-primary mb-6">
+          Privacy Policy & GDPR
         </h1>
-        <p className="text-slate-600 mb-8 leading-relaxed">
-          Denna policy förklarar hur {brandConfig.company} hanterar data och garanterar din personliga integritet när du använder vår utbildningsplattform.
+        <p className="text-foreground/80 mb-8 leading-relaxed">
+          This policy explains how {brandConfig.company} handles data and guarantees your personal privacy when using our educational platform.
         </p>
 
         <div className="space-y-8">
           <section>
-            <h2 className="text-xl font-semibold text-slate-800 mb-4 border-b border-slate-100 pb-2">
-              1. Vår "Zero-Knowledge"-Princip
+            <h2 className="text-xl font-semibold text-primary mb-4 border-b border-border/50 pb-2">
+              1. Our "Zero-Knowledge" Principle
             </h2>
-            <p className="text-slate-600 leading-relaxed">
-              Vår plattform är byggd med integritet som grundsten ("Privacy by Design"). Vi använder en så kallad Zero-Knowledge-modell vilket innebär att vi <strong>inte</strong> samlar in, lagrar eller behandlar några direkta personuppgifter om dig som användare.
+            <p className="text-foreground/80 leading-relaxed">
+              Our platform is built with privacy as its foundation ("Privacy by Design"). We use a Zero-Knowledge model, which means we <strong>do not</strong> collect, store, or process any direct personal data about you as a user.
             </p>
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold text-slate-800 mb-4 border-b border-slate-100 pb-2">
-              2. Vilken data hanterar vi?
+            <h2 className="text-xl font-semibold text-primary mb-4 border-b border-border/50 pb-2">
+              2. What data do we process?
             </h2>
-            <ul className="list-disc pl-5 text-slate-600 space-y-2 leading-relaxed">
-              <li><strong>Inloggningskoder:</strong> Du loggar in med en anonym engångskod (t.ex. DEMO-XXXX-XXXX). Denna kod kan inte knytas till dig som individ av vårt system, utan enbart av din arbetsgivare som delat ut den.</li>
-              <li><strong>Kursframsteg:</strong> Vi sparar endast information om hur långt den anonyma inloggningskoden har kommit i kursen och dess provresultat.</li>
+            <ul className="list-disc pl-5 text-foreground/80 space-y-2 leading-relaxed">
+              <li><strong>Access Codes:</strong> You log in using an anonymous, one-time code (e.g., DEMO-XXXX-XXXX). This code cannot be linked to you as an individual by our system, but only by your employer who distributed it.</li>
+              <li><strong>Course Progress:</strong> We only store information about how far the anonymous access code has progressed in the course and its exam results.</li>
             </ul>
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold text-slate-800 mb-4 border-b border-slate-100 pb-2">
-              3. Vilken data hanterar vi INTE?
+            <h2 className="text-xl font-semibold text-primary mb-4 border-b border-border/50 pb-2">
+              3. What data do we NOT process?
             </h2>
-            <p className="text-slate-600 leading-relaxed mb-4">
-              För att minimera risker och värna din integritet lagrar plattformen aldrig:
+            <p className="text-foreground/80 leading-relaxed mb-4">
+              To minimize risks and protect your privacy, the platform never stores:
             </p>
-            <ul className="list-disc pl-5 text-slate-600 space-y-2 leading-relaxed">
-              <li>Namn eller personnummer</li>
-              <li>E-postadresser</li>
-              <li>IP-adresser (förutom för kortsiktigt säkerhetsskydd under pågående anslutning)</li>
-              <li>Fysiska adresser eller telefonnummer</li>
+            <ul className="list-disc pl-5 text-foreground/80 space-y-2 leading-relaxed">
+              <li>Names or social security numbers</li>
+              <li>Email addresses</li>
+              <li>IP addresses (except for short-term security protection during an active connection)</li>
+              <li>Physical addresses or phone numbers</li>
             </ul>
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold text-slate-800 mb-4 border-b border-slate-100 pb-2">
+            <h2 className="text-xl font-semibold text-primary mb-4 border-b border-border/50 pb-2">
               4. Cookies
             </h2>
-            <p className="text-slate-600 leading-relaxed">
-              Vi använder enbart nödvändiga, tekniska cookies (via en säker JWT-session) för att hålla dig inloggad under tiden du genomför kursen. Inga spårningscookies (tredjeparts-cookies) eller annons-cookies används.
+            <p className="text-foreground/80 leading-relaxed">
+              We only use necessary, technical cookies (via a secure JWT session) to keep you logged in while you complete the course. No tracking cookies (third-party cookies) or advertising cookies are used.
             </p>
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold text-slate-800 mb-4 border-b border-slate-100 pb-2">
-              5. Dina rättigheter (GDPR)
+            <h2 className="text-xl font-semibold text-primary mb-4 border-b border-border/50 pb-2">
+              5. Your Rights (GDPR)
             </h2>
-            <p className="text-slate-600 leading-relaxed">
-              Eftersom vi inte lagrar några personuppgifter kan vi inte koppla specifik data till dig vid en begäran om utdrag. För frågor kring din licens och de koder som delats ut hänvisar vi till den HR-avdelning eller chef hos din arbetsgivare som administrerat köpet. Vid andra frågor, kontakta {brandConfig.company}.
+            <p className="text-foreground/80 leading-relaxed">
+              Since we do not store any personal data, we cannot link specific data to you in the event of a data subject access request. For questions regarding your license and the codes distributed, we refer you to the HR department or manager at your employer who administered the purchase. For other questions, contact {brandConfig.company}.
             </p>
           </section>
         </div>
 
-        <div className="mt-12 pt-8 border-t border-slate-200 text-sm text-slate-500 text-center">
-          Senast uppdaterad: 2026-04-23
+        <div className="mt-12 pt-8 border-t border-border text-sm text-foreground/60 text-center">
+          Last updated: 2026-05-03
         </div>
       </div>
     </div>

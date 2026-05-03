@@ -15,7 +15,7 @@ export async function saveProgress(currentStep: number) {
     })
 
     if (!enrollment || enrollment.status === 'COMPLETED') {
-      return { error: 'Kan inte spara framsteg. Kursen är redan klar.' }
+      return { error: 'Cannot save progress. Course is already completed.' }
     }
 
     const currentProgress = (enrollment.progressData as Record<string, any>) || {}

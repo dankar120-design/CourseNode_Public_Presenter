@@ -6,26 +6,6 @@ interface BrandLogoProps {
 }
 
 export function BrandLogo({ className = "h-8 text-primary", showText = true }: BrandLogoProps) {
-  // Funktion för att rita en isometrisk kub
-  const Cube = ({ cx, cy, s }: { cx: number, cy: number, s: number }) => {
-    const w = s * 0.866; // cos(30)
-    const h = s * 0.5;   // sin(30)
-    return (
-      <g transform={`translate(${cx}, ${cy})`}>
-        {/* Top face */}
-        <polygon points={`0,${-s} ${w},${-h} 0,0 ${-w},${-h}`} fill="currentColor" fillOpacity="0.4" />
-        {/* Left face */}
-        <polygon points={`0,0 ${-w},${-h} ${-w},${s-h} 0,${s}`} fill="currentColor" fillOpacity="0.8" />
-        {/* Right face */}
-        <polygon points={`0,0 ${w},${-h} ${w},${s-h} 0,${s}`} fill="currentColor" fillOpacity="0.6" />
-        {/* Anti-aliasing stroke borders */}
-        <polygon points={`0,${-s} ${w},${-h} 0,0 ${-w},${-h}`} fill="none" stroke="var(--background, #ffffff)" strokeWidth="1" strokeLinejoin="round" />
-        <polygon points={`0,0 ${-w},${-h} ${-w},${s-h} 0,${s}`} fill="none" stroke="var(--background, #ffffff)" strokeWidth="1" strokeLinejoin="round" />
-        <polygon points={`0,0 ${w},${-h} ${w},${s-h} 0,${s}`} fill="none" stroke="var(--background, #ffffff)" strokeWidth="1" strokeLinejoin="round" />
-      </g>
-    );
-  };
-
   return (
     <div className={`flex items-center gap-2.5 ${className}`}>
       <svg 
@@ -33,12 +13,15 @@ export function BrandLogo({ className = "h-8 text-primary", showText = true }: B
         fill="none" 
         className="h-full w-auto shrink-0"
       >
-        {/* Top cube */}
-        <Cube cx={30} cy={22} s={15} />
-        {/* Left cube */}
-        <Cube cx={17} cy={36} s={15} />
-        {/* Right cube (Smaller) */}
-        <Cube cx={41} cy={40} s={10} />
+        <path d="M30 5 L55 20 L55 40 L30 55 L5 40 L5 20 Z" stroke="currentColor" strokeWidth="3" strokeLinejoin="round" />
+        <path d="M30 15 L45 25 L45 35 L30 45 L15 35 L15 25 Z" fill="currentColor" fillOpacity="0.2" />
+        <circle cx="30" cy="30" r="4" fill="currentColor" />
+        <line x1="30" y1="5" x2="30" y2="15" stroke="currentColor" strokeWidth="1.5" />
+        <line x1="55" y1="20" x2="45" y2="25" stroke="currentColor" strokeWidth="1.5" />
+        <line x1="55" y1="40" x2="45" y2="35" stroke="currentColor" strokeWidth="1.5" />
+        <line x1="30" y1="55" x2="30" y2="45" stroke="currentColor" strokeWidth="1.5" />
+        <line x1="5" y1="40" x2="15" y2="35" stroke="currentColor" strokeWidth="1.5" />
+        <line x1="5" y1="20" x2="15" y2="25" stroke="currentColor" strokeWidth="1.5" />
       </svg>
       {showText && (
         <div className="flex flex-col justify-center leading-none mt-1">

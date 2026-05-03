@@ -6,6 +6,7 @@ import { loginWithCode } from '@/actions/auth';
 import { ShieldCheck, ArrowRight, Loader2, AlertCircle, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { BrandLogo } from '@/components/BrandLogo';
+import { PortfolioTooltip } from '@/components/PortfolioTooltip';
 
 export default function LoginPage() {
   const [error, setError] = useState('');
@@ -17,7 +18,7 @@ export default function LoginPage() {
     const cleanCode = code.trim();
     
     if (!cleanCode) {
-      setError('Vänligen fyll i din åtkomstkod först.');
+      setError('Please enter your access code first.');
       return;
     }
     
@@ -33,8 +34,8 @@ export default function LoginPage() {
           router.push('/course');
         }
       } catch (err) {
-        console.error("Inloggningsfel (Nätverk/Server):", err);
-        setError('Ett nätverksfel uppstod. Kontrollera din anslutning eller servern.');
+        console.error("Login error (Network/Server):", err);
+        setError('A network error occurred. Please check your connection.');
       }
     });
   };
@@ -48,26 +49,26 @@ export default function LoginPage() {
       </div>
 
       <div className="flex-1 flex flex-col items-center justify-center p-4 mb-12 sm:mb-20">
-        <div className="w-full max-w-md bg-white p-8 sm:p-10 rounded-2xl shadow-xl border border-border">
+        <div className="w-full max-w-md bg-card p-8 sm:p-10 rounded-2xl shadow-xl border border-border">
         <div className="flex justify-center mb-6">
           <ShieldCheck className="w-16 h-16 text-primary" />
         </div>
         
-        <h1 className="text-3xl font-black text-center text-primary mb-2">Logga In</h1>
+        <h1 className="text-3xl font-black text-center text-primary mb-2">Sign In</h1>
         <p className="text-center text-foreground/70 font-medium mb-8">
-          Ange din personliga åtkomstkod (ex. DEMO-2026-XXXX) för att starta eller återuppta din utbildning.
+          Enter your unique access code (e.g. DEMO-2026-XXXX) to start or resume your training.
         </p>
         
         <form action={handleAction} className="space-y-6">
           <div>
-            <label htmlFor="code" className="block text-sm font-bold text-primary mb-2">Åtkomstkod</label>
+            <label htmlFor="code" className="block text-sm font-bold text-primary mb-2">Access Code</label>
             <input 
               type="text" 
               id="code"
               name="code"
               required 
               defaultValue=""
-              className="w-full px-5 py-4 text-center tracking-widest uppercase font-mono text-xl bg-input border-transparent rounded-lg focus:ring-2 focus:ring-ring focus:bg-white focus:border-ring outline-none transition-all text-foreground"
+              className="w-full px-5 py-4 text-center tracking-widest uppercase font-mono text-xl bg-input border-transparent rounded-lg focus:ring-2 focus:ring-ring focus:bg-card focus:border-ring outline-none transition-all text-foreground"
               placeholder="___-____-____"
             />
           </div>
@@ -82,7 +83,7 @@ export default function LoginPage() {
           <button 
             type="submit" 
             disabled={isPending}
-            className={`w-full py-4 px-6 flex justify-center items-center gap-2 text-white font-bold rounded-lg transition-all shadow-md ${
+            className={`w-full py-4 px-6 flex justify-center items-center gap-2 text-primary-foreground font-bold rounded-lg transition-all shadow-md ${
               isPending
                 ? 'bg-primary/70 cursor-wait' 
                 : 'bg-primary hover:bg-primary/90 hover:shadow-lg'
@@ -92,7 +93,7 @@ export default function LoginPage() {
               <Loader2 className="w-5 h-5 animate-spin" />
             ) : (
               <>
-                Starta Utbildning
+                Start Training
                 <ArrowRight className="w-5 h-5" />
               </>
             )}
@@ -100,26 +101,31 @@ export default function LoginPage() {
         </form>
         
         <div className="mt-8 p-4 bg-secondary/50 rounded-xl border border-primary/10">
-          <p className="text-xs font-bold text-primary/60 uppercase tracking-wider mb-4 text-center">Testa systemet (Demo)?</p>
+          <div className="flex justify-center items-center mb-4">
+            <p className="text-xs font-bold text-primary/60 uppercase tracking-wider text-center">Test the system (Demo)</p>
+            <PortfolioTooltip title="Authentication Flow">
+              This demo bypasses standard enterprise SSO. When entering a DEMO- code, a Server Action automatically provisions a stateless user session via encrypted JWTs stored in strict HTTP-only cookies.
+            </PortfolioTooltip>
+          </div>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="bg-secondary/40 rounded-xl p-4 flex flex-col items-center gap-2 cursor-pointer hover:bg-secondary/60 transition-colors border border-border/50">
-                <span className="text-xs font-bold font-mono bg-white px-3 py-1.5 rounded-md shadow-sm text-primary select-all">
+                <span className="text-xs font-bold font-mono bg-background border border-border px-3 py-1.5 rounded-md shadow-sm text-primary select-all">
                 DEMO-COMPLIANCE
                 </span>
-              <p className="text-[10px] text-center text-slate-500 font-medium leading-tight">Enterprise Risk Management<br/>(Compliance & Policy)</p>
+              <p className="text-[10px] text-center text-foreground/60 font-medium leading-tight">Enterprise Risk Management<br/>(Compliance & Policy)</p>
               </div>
                         <div className="bg-secondary/40 rounded-xl p-4 flex flex-col items-center gap-2 cursor-pointer hover:bg-secondary/60 transition-colors border border-border/50">
-                <span className="text-xs font-bold font-mono bg-white px-3 py-1.5 rounded-md shadow-sm text-primary select-all">
+                <span className="text-xs font-bold font-mono bg-background border border-border px-3 py-1.5 rounded-md shadow-sm text-primary select-all">
                 DEMO-SEC
                 </span>
-              <p className="text-[10px] text-center text-slate-500 font-medium leading-tight">Zero-Trust Architecture<br/>(Security & MTO)</p>
+              <p className="text-[10px] text-center text-foreground/60 font-medium leading-tight">Zero-Trust Architecture<br/>(Security & MTO)</p>
               </div>
             </div>
         </div>
         
         <div className="mt-8 text-center text-sm font-medium text-foreground/50">
-          Behöver du hjälp? Kontakta din närmaste chef eller skyddsombud.
+          Need help? Contact your manager or technical support.
         </div>
       </div>
       </div>

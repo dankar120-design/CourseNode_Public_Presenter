@@ -22,7 +22,7 @@ export default async function CoursePage() {
 
   const parsed = CourseContentSchema.safeParse(enrollment.course.content);
   if (!parsed.success) {
-    return <div className="p-8 text-center text-destructive font-bold">Ogiltigt kursinnehåll i databasen.</div>;
+    return <div className="p-8 text-center text-destructive font-bold">Invalid course content in database.</div>;
   }
   
   const courseContent = parsed.data;

@@ -37,7 +37,7 @@ export async function startExamSession(isSandbox: boolean = false) {
   try {
     const session = await getSession()
     if (!session || typeof session.enrollmentId !== 'string') {
-      return { error: 'Obehörig.' }
+      return { error: 'Unauthorized.' }
     }
 
     const enrollment = await prisma.enrollment.findUnique({
@@ -46,12 +46,12 @@ export async function startExamSession(isSandbox: boolean = false) {
     })
 
     if (!enrollment || enrollment.status === 'COMPLETED') {
-      return { error: 'Kan inte starta prov, kursen är redan klar eller hittades inte.' }
+      return { error: 'Cannot start exam, course is already completed or not found.' }
     }
 
     const parsed = CourseContentSchema.safeParse(enrollment.course.content)
     if (!parsed.success) {
-      return { error: 'Ogiltigt kursinnehåll i databasen.' }
+      return { error: 'Invalid course content in database.' }
     }
 
     // Cooldown check (only if not sandbox)
@@ -61,7 +61,7 @@ export async function startExamSession(isSandbox: boolean = false) {
       const now = new Date();
       const diffSeconds = (now.getTime() - lastAttempt.getTime()) / 1000;
       if (diffSeconds < EXAM_COOLDOWN_SECONDS) {
-        return { error: `Du måste vänta ${Math.ceil(EXAM_COOLDOWN_SECONDS - diffSeconds)} sekunder till innan du kan försöka igen.` }
+        return { error: `You must wait ${Math.ceil(EXAM_COOLDOWN_SECONDS - diffSeconds)} more seconds before trying again.` }
       }
     }
 
@@ -113,7 +113,7 @@ export async function startExamSession(isSandbox: boolean = false) {
     return { questions: safeQuestions }
   } catch (error) {
     console.error('startExamSession error:', error);
-    return { error: 'Ett fel inträffade när provet skulle startas.' }
+    return { error: 'An error occurred while starting the exam.' }
   }
 }
 
@@ -121,7 +121,7 @@ export async function submitExam(answers: Record<string, string>, isSandbox: boo
   try {
     const session = await getSession()
     if (!session || typeof session.enrollmentId !== 'string') {
-      return { error: 'Obehörig.' }
+      return { error: 'Unauthorized.' }
     }
 
     const enrollment = await prisma.enrollment.findUnique({
@@ -130,7 +130,7 @@ export async function submitExam(answers: Record<string, string>, isSandbox: boo
     })
 
     if (!enrollment || enrollment.status === 'COMPLETED') {
-      return { error: 'Kunde inte hitta kursregistreringen eller provet är redan klart.' }
+      return { error: 'Could not find course registration or exam is already completed.' }
     }
 
     const progressData = (enrollment.progressData as ProgressData) || {};
@@ -141,25 +141,25 @@ export async function submitExam(answers: Record<string, string>, isSandbox: boo
         const now = new Date();
         const diffSeconds = (now.getTime() - lastAttempt.getTime()) / 1000;
         if (diffSeconds < EXAM_COOLDOWN_SECONDS) {
-          return { error: `Du måste vänta ${Math.ceil(EXAM_COOLDOWN_SECONDS - diffSeconds)} sekunder till innan du kan försöka igen.` }
+          return { error: `You must wait ${Math.ceil(EXAM_COOLDOWN_SECONDS - diffSeconds)} more seconds before trying again.` }
         }
       }
 
       // Security Check: Match active session
       if (!progressData.activeExamSession || !progressData.activeExamSession.questionIds) {
-        return { error: 'Ingen aktiv prov-session hittades. Ladda om sidan.' }
+        return { error: 'No active exam session found. Please reload the page.' }
       }
 
       const activeIds = progressData.activeExamSession.questionIds;
       const submittedIds = Object.keys(answers);
       
       if (activeIds.length !== submittedIds.length || !activeIds.every(id => submittedIds.includes(id))) {
-        return { error: 'Säkerhetsfel: Inskickade svar matchar inte den aktiva prov-sessionen. Manipulation misstänks.' }
+        return { error: 'Security error: Submitted answers do not match the active exam session. Manipulation suspected.' }
       }
     }
 
     const parsed = CourseContentSchema.safeParse(enrollment.course.content)
-    if (!parsed.success) { return { error: 'Ogiltigt kursinnehåll.' } }
+    if (!parsed.success) { return { error: 'Invalid course content.' } }
     const examQuestions = parsed.data.examination;
 
     const failedQuestionIds: string[] = []
@@ -189,7 +189,7 @@ export async function submitExam(answers: Record<string, string>, isSandbox: boo
         })
       }
       return { 
-        error: isSandbox ? `[SANDBOX] Du fick ${correctCount} av ${requiredCount} rätt. Felaktiga svar markeras röda.` : `Du fick ${correctCount} av ${requiredCount} rätt (Krav: ${passThreshold}). Läs igenom materialet och försök igen.`, 
+        error: isSandbox ? `[SANDBOX] You got ${correctCount} out of ${requiredCount} correct. Incorrect answers are marked in red.` : `You got ${correctCount} out of ${requiredCount} correct (Required: ${passThreshold}). Please review the material and try again.`, 
         failedQuestionIds 
       }
     }
@@ -218,8 +218,8 @@ export async function submitExam(answers: Record<string, string>, isSandbox: boo
           await resend.emails.send({
             from: `${brandConfig.email.senderName} <noreply@acme-enterprise.com>`,
             to: [adminEmail],
-            subject: `Ny kurs godkänd (${enrollment.accessCodeId})`,
-            text: `Användaren med kod ${enrollment.accessCodeId} har precis klarat kursen ${enrollment.course.title}.`,
+            subject: `New course completed (${enrollment.accessCodeId})`,
+            text: `User with code ${enrollment.accessCodeId} has just completed the course ${enrollment.course.title}.`,
           })
         }
       } catch (emailError) {}
@@ -228,19 +228,19 @@ export async function submitExam(answers: Record<string, string>, isSandbox: boo
     return { success: true }
   } catch (error) {
     console.error('Exam submission error:', error)
-    return { error: 'Ett internt fel inträffade vid rättningen.' }
+    return { error: 'An internal error occurred during grading.' }
   }
 }
 
 export async function cheatCompleteExam() {
-  if (process.env.NODE_ENV === 'production') return { error: 'Denna funktion är spärrad i produktionsmiljö.' }
+  if (process.env.NEXT_PUBLIC_DEMO_MODE !== 'true') return { error: 'This feature is disabled.' }
   try {
     const session = await getSession()
-    if (!session || typeof session.enrollmentId !== 'string') return { error: 'Obehörig.' }
+    if (!session || typeof session.enrollmentId !== 'string') return { error: 'Unauthorized.' }
     await prisma.enrollment.update({
       where: { id: session.enrollmentId },
       data: { status: 'COMPLETED', completedAt: new Date(), auditLogs: { cheatUsed: true, cheatedAt: new Date().toISOString() } }
     })
     return { success: true }
-  } catch (error) { return { error: 'Ett fel inträffade vid exekvering av fusk.' } }
+  } catch (error) { return { error: 'An error occurred while executing cheat.' } }
 }

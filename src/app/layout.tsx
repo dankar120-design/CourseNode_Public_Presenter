@@ -26,16 +26,16 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="sv"
+      lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         <main className="flex-1 flex flex-col">
           {children}
         </main>
-        <footer className="w-full py-4 mt-auto text-center border-t border-slate-200/60 bg-white/50 backdrop-blur-sm">
-          <Link href="/privacy" className="text-xs text-slate-400 hover:text-slate-600 transition-colors">
-            Integritetspolicy & GDPR (Zero-Knowledge)
+        <footer className="w-full py-4 mt-auto text-center border-t border-border bg-background/50 backdrop-blur-sm">
+          <Link href="/privacy" className="text-xs text-foreground/40 hover:text-foreground/80 transition-colors">
+            Privacy Policy & GDPR (Zero-Knowledge)
           </Link>
         </footer>
       </body>

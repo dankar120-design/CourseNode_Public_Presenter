@@ -42,8 +42,8 @@ export default async function SandboxPage({ params, searchParams }: PageProps) {
       if (!parsed.success) {
         return (
           <div className="p-8 text-center bg-destructive/10 text-destructive font-bold">
-            <h2 className="text-xl mb-4">JSON Valideringsfel</h2>
-            <pre className="text-left text-xs overflow-auto bg-white p-4 rounded-lg border border-destructive/20 shadow-inner">
+            <h2 className="text-xl mb-4">JSON Validation Error</h2>
+            <pre className="text-left text-xs overflow-auto bg-card p-4 rounded-lg border border-border shadow-inner">
               {parsed.error.message}
             </pre>
           </div>
@@ -85,8 +85,8 @@ export default async function SandboxPage({ params, searchParams }: PageProps) {
             Sandbox Mode: {source === 'file' ? '📁 Local File' : '🗄️ Database'}
           </span>
           <div className="flex gap-2">
-            <a href="?source=file" className={`px-3 py-1 rounded text-xs font-bold transition-colors ${source === 'file' ? 'bg-accent text-white' : 'bg-white text-accent hover:bg-accent/10'}`}>File</a>
-            <a href="?source=db" className={`px-3 py-1 rounded text-xs font-bold transition-colors ${source !== 'file' ? 'bg-accent text-white' : 'bg-white text-accent hover:bg-accent/10'}`}>Database</a>
+            <a href="?source=file" className={`px-3 py-1 rounded text-xs font-bold transition-colors ${source === 'file' ? 'bg-primary text-primary-foreground' : 'bg-card text-primary hover:bg-primary/10'}`}>File</a>
+            <a href="?source=db" className={`px-3 py-1 rounded text-xs font-bold transition-colors ${source !== 'file' ? 'bg-primary text-primary-foreground' : 'bg-card text-primary hover:bg-primary/10'}`}>Database</a>
           </div>
         </div>
         

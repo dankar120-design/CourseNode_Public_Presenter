@@ -8,6 +8,7 @@ import { submitExam, cheatCompleteExam, startExamSession } from '@/actions/exam'
 import { saveProgress } from '@/actions/progress';
 import { resetDemoProgress } from '@/actions/demo';
 import { BrandLogo } from '@/components/BrandLogo';
+import { PortfolioTooltip } from '@/components/PortfolioTooltip';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { Clock } from 'lucide-react';
@@ -58,8 +59,8 @@ function getModuleSlides(markdown: string) {
     .filter(c => c.length > 0)
     .map(chunk => {
        const lines = chunk.split('\n');
-       const title = chunk.startsWith('### ') ? lines[0].replace(/^### /, '').trim() : 'Introduktion';
-       return { title: title || 'Introduktion', content: chunk };
+       const title = chunk.startsWith('### ') ? lines[0].replace(/^### /, '').trim() : 'Introduction';
+       return { title: title || 'Introduction', content: chunk };
     });
 }
 
@@ -185,7 +186,7 @@ export default function CourseEngine({ courseTitle, modules, examination, initia
         setCurrentSlideIndex(0);
         if (!isSandbox) {
           saveProgress(nextStep).catch(() => {
-            alert("Kunde inte spara dina framsteg på grund av ett nätverksfel.");
+            alert("Could not save your progress due to a network error.");
           });
         }
       }
@@ -223,7 +224,7 @@ export default function CourseEngine({ courseTitle, modules, examination, initia
     window.scrollTo({ top: 0, behavior: 'smooth' });
     
     if (Object.keys(selectedAnswers).length < shuffledQuestions.length) {
-      setExamError('Du måste svara på alla frågor innan du kan rätta provet.');
+      setExamError('You must answer all questions before submitting the exam.');
       return;
     }
 
@@ -239,7 +240,7 @@ export default function CourseEngine({ courseTitle, modules, examination, initia
         setFailedQuestionIds(result.failedQuestionIds);
       }
       
-      if (result.error.includes('Ingen aktiv prov-session') || result.error.includes('Säkerhetsfel')) {
+      if (result.error.includes('No active exam session') || result.error.includes('Security error')) {
         sessionStorage.removeItem(storageKey);
         setShuffledQuestions([]);
         setSelectedAnswers({});
@@ -259,7 +260,7 @@ export default function CourseEngine({ courseTitle, modules, examination, initia
   };
 
   const handleCheat = async () => {
-    if (confirm('Vill du fuska och hoppa direkt till certifikatet?')) {
+    if (confirm('Do you want to cheat and skip directly to the certificate?')) {
       setSubmitting(true);
       
       if (isSandbox) {
@@ -281,7 +282,7 @@ export default function CourseEngine({ courseTitle, modules, examination, initia
   };
 
   const handleResetDemo = async () => {
-    if (confirm('Är du säker på att du vill nollställa hela demoprovet och börja om?')) {
+    if (confirm('Are you sure you want to reset the demo exam and start over?')) {
       setSubmitting(true);
       const result = await resetDemoProgress();
       if (result.error) {
@@ -296,7 +297,7 @@ export default function CourseEngine({ courseTitle, modules, examination, initia
 
   const handleGenerateCertificate = async () => {
     if (!certName.trim()) {
-      setExamError('Du måste ange ditt namn för certifikatet.');
+      setExamError('You must enter your name for the certificate.');
       return;
     }
 
@@ -330,18 +331,18 @@ export default function CourseEngine({ courseTitle, modules, examination, initia
   if (isCertificateStep) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen p-4 animate-in fade-in zoom-in duration-500 bg-background">
-        <div className="bg-white shadow-sm border border-border p-8 md:p-12 rounded-2xl text-center max-w-2xl w-full">
+        <div className="bg-card shadow-sm border border-border p-8 md:p-12 rounded-2xl text-center max-w-2xl w-full">
           <div className="flex justify-center mb-6">
             <CheckCircle2 className="w-20 h-20 text-success" />
           </div>
-          <h1 className="text-4xl font-black text-primary mb-2">Utbildning Slutförd</h1>
+          <h1 className="text-4xl font-black text-primary mb-2">Training Completed</h1>
           <p className="text-lg font-medium text-foreground/80 mb-8">
-            Du är godkänd i <span className="text-accent font-bold">{courseTitle}</span>.
+            You have passed <span className="text-accent font-bold">{courseTitle}</span>.
           </p>
 
           {!pdfUri ? (
-            <div className="text-left bg-white p-6 rounded-xl mb-8">
-              <label className="block text-sm font-bold text-primary mb-2">Ange namn för certifikatet</label>
+            <div className="text-left bg-card p-6 rounded-xl mb-8">
+              <label className="block text-sm font-bold text-primary mb-2">Enter name for the certificate</label>
               <input 
                 type="text" 
                 value={certName}
@@ -349,12 +350,12 @@ export default function CourseEngine({ courseTitle, modules, examination, initia
                   setCertName(e.target.value);
                   setExamError('');
                 }}
-                placeholder="För- och efternamn"
+                placeholder="First and Last Name"
                 className="w-full px-4 py-3 bg-secondary border border-border rounded-lg focus:ring-2 focus:ring-ring outline-none transition-all font-medium text-foreground mb-3"
               />
               <p className="text-xs text-foreground/60 font-medium flex items-start gap-2">
                 <ShieldCheck className="w-4 h-4 text-success flex-shrink-0" />
-                Sekretess: Ditt namn sparas INTE i databasen (GDPR). Det används enbart för att generera PDF:en lokalt.
+                Privacy: Your name is NOT saved in the database (GDPR). It is only used to generate the PDF locally.
               </p>
               
               {examError && (
@@ -373,14 +374,14 @@ export default function CourseEngine({ courseTitle, modules, examination, initia
                 }`}
               >
                 {submitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <Download className="w-5 h-5" />}
-                Skapa och ladda ner certifikat
+                Generate and download certificate
               </button>
             </div>
           ) : (
             <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 bg-success/5 p-8 rounded-xl border border-success/20 mb-8">
                <p className="text-success font-bold mb-6 flex items-center justify-center gap-2">
                 <CheckCircle2 className="w-5 h-5" />
-                Ditt certifikat är redo!
+                Your certificate is ready!
                </p>
                <div className="flex flex-col sm:flex-row justify-center gap-4">
                 <button 
@@ -389,24 +390,24 @@ export default function CourseEngine({ courseTitle, modules, examination, initia
                   }}
                   className="flex items-center justify-center gap-2 px-6 py-4 bg-accent text-white font-bold rounded-xl"
                 >
-                  <Download className="w-5 h-5" /> Ladda ner filen
+                  <Download className="w-5 h-5" /> Download file
                 </button>
                 <button 
                   onClick={() => {
                     setPdfUri(null);
                     setCertName('');
                   }} 
-                  className="flex items-center justify-center gap-2 px-6 py-4 bg-white border border-border text-foreground/70 font-bold rounded-xl hover:bg-secondary/50 transition-colors"
+                  className="flex items-center justify-center gap-2 px-6 py-4 bg-card border border-border text-foreground/70 font-bold rounded-xl hover:bg-secondary/50 transition-colors"
                 >
-                  Generera på nytt
+                  Regenerate
                 </button>
               </div>
             </div>
           )}
 
           <div className="mt-4 border-t border-border pt-6 flex flex-col gap-3">
-            <button onClick={handleLogout} className="flex items-center justify-center gap-2 px-6 py-3 mx-auto bg-white text-primary font-bold rounded-lg hover:bg-secondary/50 transition-colors w-full sm:w-auto">
-              <LogOut className="w-5 h-5" /> Logga ut och stäng
+            <button onClick={handleLogout} className="flex items-center justify-center gap-2 px-6 py-3 mx-auto bg-card text-primary font-bold rounded-lg hover:bg-secondary/50 transition-colors w-full sm:w-auto">
+              <LogOut className="w-5 h-5" /> Sign out and close
             </button>
             {process.env.NEXT_PUBLIC_DEMO_MODE === 'true' && (
               <button 
@@ -415,7 +416,7 @@ export default function CourseEngine({ courseTitle, modules, examination, initia
                 className="flex items-center justify-center gap-2 px-6 py-3 mx-auto bg-destructive/10 text-destructive font-bold rounded-lg hover:bg-destructive hover:text-white transition-colors w-full sm:w-auto"
               >
                 {submitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <RefreshCw className="w-5 h-5" />}
-                Nollställ Demo
+                Reset Demo
               </button>
             )}
           </div>
@@ -437,7 +438,7 @@ export default function CourseEngine({ courseTitle, modules, examination, initia
 
   return (
     <div className="flex flex-col min-h-screen">
-      <header className="bg-white shadow-sm border border-border sticky top-0 z-10 px-4 sm:px-6 py-3 sm:py-4 flex justify-between items-center rounded-none ">
+      <header className="bg-card shadow-sm border border-border sticky top-0 z-10 px-4 sm:px-6 py-3 sm:py-4 flex justify-between items-center rounded-none ">
         <div className="flex items-center gap-2 sm:gap-3">
           <Link href="/" className="hover:opacity-80 transition-opacity block">
             <BrandLogo className="h-6 sm:h-8" showText={true} />
@@ -453,22 +454,27 @@ export default function CourseEngine({ courseTitle, modules, examination, initia
             >
               {submitting ? '...' : (
                 <span className="flex items-center gap-1">
-                  <RefreshCw className="w-3 h-3" /> Nollställ Demo
+                  <RefreshCw className="w-3 h-3" /> Reset Demo
                 </span>
               )}
             </button>
           )}
           {(process.env.NODE_ENV !== 'production' || process.env.NEXT_PUBLIC_DEMO_MODE === 'true') && (
-            <button 
-              onClick={handleCheat}
-              disabled={submitting}
-              className="text-[10px] uppercase tracking-tighter font-black bg-destructive/10 text-destructive px-2 py-1 rounded hover:bg-destructive hover:text-white transition-colors"
-            >
-              {submitting ? '...' : '🐛 Fusk'}
-            </button>
+            <div className="flex items-center gap-1">
+              <button 
+                onClick={handleCheat}
+                disabled={submitting}
+                className="text-[10px] uppercase tracking-tighter font-black bg-destructive/10 text-destructive px-2 py-1 rounded hover:bg-destructive hover:text-white transition-colors"
+              >
+                {submitting ? '...' : '🐛 Cheat'}
+              </button>
+              <PortfolioTooltip title="Cheat Mode">
+                This feature automatically bypasses the exam requirements for demonstration purposes, mimicking an authorized admin override. It's disabled in real production environments.
+              </PortfolioTooltip>
+            </div>
           )}
           <span className="text-sm font-bold text-foreground/60 bg-secondary px-3 py-1 rounded-full">
-            Steg {currentStep + 1} av {modules.length + 1}
+            Step {currentStep + 1} of {modules.length + 1}
           </span>
           <button onClick={handleLogout} className="text-foreground/50 hover:text-primary transition-colors">
             <LogOut className="w-5 h-5" />
@@ -477,7 +483,7 @@ export default function CourseEngine({ courseTitle, modules, examination, initia
       </header>
 
       <main className="flex-grow flex flex-col items-center p-2 sm:p-4 py-6 md:py-12">
-        <div className="max-w-3xl w-full bg-white shadow-sm border border-border rounded-2xl overflow-hidden">
+        <div className="max-w-3xl w-full bg-card shadow-sm border border-border rounded-2xl overflow-hidden">
           
           <div className="w-full bg-secondary h-2">
             <div 
@@ -493,19 +499,19 @@ export default function CourseEngine({ courseTitle, modules, examination, initia
                   <h2 className="text-2xl md:text-3xl font-black text-primary">{modules[currentStep].title}</h2>
                   <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4">
                     <div className="flex items-center gap-1.5 text-sm font-bold text-primary bg-primary/10 px-3 py-1.5 rounded-lg border border-primary/20">
-                      Del {currentSlideIndex + 1} av {currentSlides.length}
+                      Part {currentSlideIndex + 1} of {currentSlides.length}
                     </div>
                     {modules[currentStep].duration && (
                       <div className="flex items-center gap-1.5 text-xs font-bold text-foreground/40 bg-secondary/50 px-3 py-1.5 rounded-lg border border-border/50">
                         <Clock className="w-3.5 h-3.5" />
-                        {modules[currentStep].duration} min lästid
+                        {modules[currentStep].duration} min read
                       </div>
                     )}
                   </div>
                 </div>
 
                 {modules[currentStep].image && (
-                  <div className="mb-8 rounded-xl overflow-hidden bg-white relative w-full aspect-video max-h-[400px]">
+                  <div className="mb-8 rounded-xl overflow-hidden bg-card relative w-full aspect-video max-h-[400px]">
                     <Image 
                       src={modules[currentStep].image} 
                       alt=""
@@ -531,13 +537,13 @@ export default function CourseEngine({ courseTitle, modules, examination, initia
                       th: (props) => <th className="px-4 py-3 font-bold text-primary border-b border-border text-sm" {...props} />,
                       td: (props) => <td className="px-4 py-3 border-b border-border/50 text-foreground text-sm" {...props} />,
                       img: (props) => (
-                        <div className="relative w-full aspect-video my-8 rounded-xl overflow-hidden border border-border shadow-sm bg-white">
+                        <div className="relative w-full aspect-video my-8 rounded-xl overflow-hidden border border-border shadow-sm bg-card">
                           <Image src={(props.src as string) || ''} alt={props.alt || ''} fill className="object-cover" />
                         </div>
                       )
                     }}
                   >
-                    {currentSlides[currentSlideIndex]?.content || 'Innehåll saknas.'}
+                    {currentSlides[currentSlideIndex]?.content || 'Content missing.'}
                   </ReactMarkdown>
                 </div>
               </div>
@@ -555,10 +561,10 @@ export default function CourseEngine({ courseTitle, modules, examination, initia
                     <div className="flex items-start gap-4">
                       <AlertCircle className="w-8 h-8 flex-shrink-0 mt-0.5" />
                       <div>
-                        <h3 className="font-black text-lg">Provet är låst</h3>
+                        <h3 className="font-black text-lg">Exam is locked</h3>
                         <p className="mt-1 font-medium text-destructive/80">
                           {examError && !examError.includes('vänta') && <span className="block mb-2 font-bold text-destructive">{examError}</span>}
-                          Läs igenom kursmaterialet. Du kan försöka igen om {formatTime(cooldownRemaining)}.
+                          Review the course material. You can try again in {formatTime(cooldownRemaining)}.
                         </p>
                       </div>
                     </div>
@@ -570,9 +576,9 @@ export default function CourseEngine({ courseTitle, modules, examination, initia
                         const prevSlides = getModuleSlides(modules[prevStep].content);
                         setCurrentSlideIndex(Math.max(0, prevSlides.length - 1));
                       }}
-                      className="w-full md:w-auto px-6 py-3 bg-white text-destructive border border-destructive/20 rounded-lg shadow-sm hover:bg-destructive/5 font-bold transition-all whitespace-nowrap flex items-center justify-center gap-2"
+                      className="w-full md:w-auto px-6 py-3 bg-card text-destructive border border-destructive/20 rounded-lg shadow-sm hover:bg-destructive/5 font-bold transition-all whitespace-nowrap flex items-center justify-center gap-2"
                     >
-                      ← Gå tillbaka och repetera
+                      ← Go back and review
                     </button>
                   </div>
                 )}
@@ -580,19 +586,19 @@ export default function CourseEngine({ courseTitle, modules, examination, initia
                 {loadingExam && (
                   <div className="flex flex-col items-center justify-center p-12 mb-8">
                     <Loader2 className="w-10 h-10 animate-spin text-accent mb-4" />
-                    <p className="text-foreground/60 font-bold">Laddar säker examination...</p>
+                    <p className="text-foreground/60 font-bold">Loading secure examination...</p>
                   </div>
                 )}
 
                 {!loadingExam && shuffledQuestions.length === 0 && cooldownRemaining === 0 && examError && (
-                  <div className="flex flex-col items-center justify-center p-8 mb-8 bg-white border-accent/20">
+                  <div className="flex flex-col items-center justify-center p-8 mb-8 bg-card border-accent/20">
                     <AlertCircle className="w-12 h-12 text-primary mb-4" />
                     <p className="text-foreground/80 font-bold mb-6 text-center max-w-md">{examError}</p>
                     <button 
                       onClick={fetchExam}
                       className="px-8 py-4 bg-accent text-white font-bold rounded-xl flex items-center gap-2"
                     >
-                      <RefreshCw className="w-5 h-5" /> Försök Igen
+                      <RefreshCw className="w-5 h-5" /> Try Again
                     </button>
                   </div>
                 )}
@@ -608,7 +614,7 @@ export default function CourseEngine({ courseTitle, modules, examination, initia
                             <span className="text-accent mr-2">{index + 1}.</span>
                             {q.question}
                           </h3>
-                          {isFailed && <span className="text-xs font-bold text-destructive bg-destructive/10 px-2 py-1 rounded-md self-start sm:self-auto whitespace-nowrap">Felaktigt svar</span>}
+                          {isFailed && <span className="text-xs font-bold text-destructive bg-destructive/10 px-2 py-1 rounded-md self-start sm:self-auto whitespace-nowrap">Incorrect answer</span>}
                         </div>
                         
                         <div className="space-y-3">
@@ -618,7 +624,7 @@ export default function CourseEngine({ courseTitle, modules, examination, initia
                                 className={`flex items-start p-3 sm:p-4 rounded-xl border-2 cursor-pointer transition-all ${
                                   selectedAnswers[q.id] === answer 
                                     ? (isFailed ? 'border-destructive bg-destructive/10 ring-1 ring-destructive' : 'border-accent bg-accent/5 shadow-sm ring-1 ring-accent')
-                                    : 'border-border bg-white hover:border-accent/40 hover:bg-secondary/30'
+                                    : 'border-border bg-card hover:border-accent/40 hover:bg-secondary/30'
                                 } ${cooldownRemaining > 0 ? 'opacity-70 pointer-events-none' : ''}`}
                               >
                                 <input 
@@ -660,20 +666,20 @@ export default function CourseEngine({ courseTitle, modules, examination, initia
               <ArrowLeft className="w-5 h-5" /> 
               <span className="hidden sm:inline">
                 {!isExamStep && currentSlideIndex > 0 
-                  ? `Föregående: ${currentSlides[currentSlideIndex - 1]?.title}` 
-                  : 'Föregående Modul'}
+                  ? `Previous: ${currentSlides[currentSlideIndex - 1]?.title}` 
+                  : 'Previous Module'}
               </span>
             </button>
 
             {!isExamStep ? (
               <button 
                 onClick={handleNext}
-                className="flex items-center gap-2 px-6 sm:px-8 py-3 bg-primary text-white font-bold rounded-lg hover:bg-primary/90 shadow-md transition-all hover:shadow-lg max-w-[50%] sm:max-w-[60%]"
+                className="flex items-center gap-2 px-6 sm:px-8 py-3 bg-primary text-primary-foreground font-bold rounded-lg hover:bg-primary/90 shadow-md transition-all hover:shadow-lg max-w-[50%] sm:max-w-[60%]"
               >
                 <span className="truncate">
                   {currentSlideIndex < currentSlides.length - 1 
-                    ? `Nästa: ${currentSlides[currentSlideIndex + 1]?.title}` 
-                    : (currentStep === examStepIndex - 1 ? 'Gå till Examination' : 'Nästa Modul')
+                    ? `Next: ${currentSlides[currentSlideIndex + 1]?.title}` 
+                    : (currentStep === examStepIndex - 1 ? 'Go to Examination' : 'Next Module')
                   }
                 </span>
                 <ArrowRight className="w-5 h-5 flex-shrink-0" />
@@ -689,7 +695,7 @@ export default function CourseEngine({ courseTitle, modules, examination, initia
                 }`}
               >
                 {submitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <CheckCircle2 className="w-5 h-5 hidden sm:inline" />}
-                Rätta Prov
+                Submit Exam
               </button>
             )}
           </div>

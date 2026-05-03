@@ -13,10 +13,10 @@ export async function requestQuote(formData: FormData) {
     const userEmail = formData.get('user_email') as string
 
     if (!companyName || !licenses || !selectedCourseId || !userEmail) {
-      return { error: 'Alla fält måste fyllas i.' }
+      return { error: 'All fields must be filled.' }
     }
 
-    // Slå upp kursnamnet baserat på ID för ett snyggare mail
+    // Lookup the course name based on ID for a nicer email
     const course = courses.find(c => c.id === selectedCourseId)
     const courseTitle = course ? course.title : selectedCourseId
 
@@ -27,32 +27,32 @@ export async function requestQuote(formData: FormData) {
     await resend.emails.send({
       from: 'Acme Enterprise <noreply@acme-enterprise.com>',
       to: [adminEmail],
-      subject: `Ny offertförfrågan: ${courseTitle}`,
+      subject: `New quote request: ${courseTitle}`,
       html: `
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
-          <h2 style="color: #003366;">Ny offertförfrågan mottagen</h2>
-          <p style="color: #666;">En ny förfrågan har kommit in via webbplatsen.</p>
+          <h2 style="color: #171717;">New quote request received</h2>
+          <p style="color: #666;">A new request has been submitted via the website.</p>
           <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;" />
           <table style="width: 100%; border-collapse: collapse;">
             <tr>
-              <td style="padding: 8px 0; font-weight: bold; color: #003366;">Företag:</td>
+              <td style="padding: 8px 0; font-weight: bold; color: #171717;">Company:</td>
               <td style="padding: 8px 0;">${companyName}</td>
             </tr>
             <tr>
-              <td style="padding: 8px 0; font-weight: bold; color: #003366;">Kontakt:</td>
+              <td style="padding: 8px 0; font-weight: bold; color: #171717;">Contact:</td>
               <td style="padding: 8px 0;">${userEmail}</td>
             </tr>
             <tr>
-              <td style="padding: 8px 0; font-weight: bold; color: #003366;">Kurs:</td>
+              <td style="padding: 8px 0; font-weight: bold; color: #171717;">Course:</td>
               <td style="padding: 8px 0;">${courseTitle} (${selectedCourseId})</td>
             </tr>
             <tr>
-              <td style="padding: 8px 0; font-weight: bold; color: #003366;">Antal licenser:</td>
-              <td style="padding: 8px 0;">${licenses} st</td>
+              <td style="padding: 8px 0; font-weight: bold; color: #171717;">Licenses:</td>
+              <td style="padding: 8px 0;">${licenses}</td>
             </tr>
           </table>
           <div style="margin-top: 30px; padding: 15px; background-color: #f9f9f9; border-radius: 5px; font-size: 12px; color: #999;">
-            Detta är ett automatiskt meddelande från Acme Enterprise.
+            This is an automated message from Acme Enterprise.
           </div>
         </div>
       `
@@ -61,6 +61,6 @@ export async function requestQuote(formData: FormData) {
     return { success: true }
   } catch (error) {
     console.error('Quote request error:', error)
-    return { error: 'Ett fel inträffade när offertförfrågan skulle skickas. Kontrollera Resend API-nyckel.' }
+    return { error: 'An error occurred while sending the quote request. Please check your Resend API key.' }
   }
 }

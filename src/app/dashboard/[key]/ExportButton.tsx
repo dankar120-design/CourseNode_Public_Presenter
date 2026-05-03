@@ -18,11 +18,11 @@ interface ExportButtonProps {
 export default function ExportButton({ data, companyName }: ExportButtonProps) {
   const handleDownload = () => {
     const csvRows = [
-      ['Kod', 'Status', 'Datum för slutförande', 'Intyg utskrivna']
+      ['Code', 'Status', 'Completion Date', 'Certificates Printed']
     ];
 
     for (const row of data) {
-      csvRows.push([row.code, row.status, row.completedAt, row.status === 'Godkänd' ? `${row.certDownloads}/3` : '-']);
+      csvRows.push([row.code, row.status, row.completedAt, row.status === 'Completed' ? `${row.certDownloads}/3` : '-']);
     }
 
     const csvContent = csvRows.map(row => 
@@ -42,7 +42,7 @@ export default function ExportButton({ data, companyName }: ExportButtonProps) {
     link.setAttribute('href', url);
     const dateStr = new Date().toISOString().split('T')[0];
     const safeName = companyName.replace(/[^a-z0-9]/gi, '_').toLowerCase();
-    link.setAttribute('download', `${safeName}_rapport_${dateStr}.csv`);
+    link.setAttribute('download', `${safeName}_report_${dateStr}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -52,10 +52,10 @@ export default function ExportButton({ data, companyName }: ExportButtonProps) {
   return (
     <button 
       onClick={handleDownload}
-      className="flex items-center gap-2 bg-slate-800 text-white px-4 py-2 rounded-lg font-medium hover:bg-slate-700 transition-colors shadow-sm"
+      className="flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2 rounded-lg font-medium hover:bg-primary/80 transition-colors shadow-sm"
     >
       <Download className="w-4 h-4" />
-      Ladda ner CSV-rapport
+      Download CSV report
     </button>
   );
 }

@@ -15,8 +15,8 @@ interface Course {
 
 const CourseCard = ({ course }: { course: Course }) => {
   return (
-    <div className="flex flex-col h-full bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-border group">
-      <div className={`p-6 flex justify-between items-start ${course.iconColor || 'bg-secondary text-primary'}`}>
+    <div className="flex flex-col h-full bg-card rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-border group">
+      <div className={`p-6 flex justify-between items-start border-b border-border/30 ${course.iconColor || 'bg-secondary text-primary'}`}>
         <h3 className="text-xl font-bold px-2">{course.title}</h3>
         <BookOpen className="w-6 h-6 flex-shrink-0 opacity-80" />
       </div>
@@ -28,14 +28,14 @@ const CourseCard = ({ course }: { course: Course }) => {
           {course.description}
         </p>
         <div className="pt-4 border-t border-border mt-auto mb-6">
-          <p className="text-xs text-foreground/60 font-medium">Målgrupp: {course.target}</p>
+          <p className="text-xs text-foreground/60 font-medium">Target: {course.target}</p>
         </div>
         
         <Link 
-          href={`/?courseId=${course.id}#offert`}
-          className="w-full py-3 bg-primary text-white font-bold rounded-lg flex items-center justify-center gap-2 hover:bg-primary/90 transition-all shadow-md group-hover:scale-[1.02]"
+          href={`/?courseId=${course.id}#quote`}
+          className="w-full py-3 bg-primary text-primary-foreground font-bold rounded-lg flex items-center justify-center gap-2 hover:bg-primary/90 transition-all shadow-md group-hover:scale-[1.02]"
         >
-          Begär Offert
+          Request Quote
           <ArrowRight className="w-4 h-4" />
         </Link>
       </div>
