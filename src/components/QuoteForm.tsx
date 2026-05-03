@@ -80,7 +80,7 @@ const QuoteForm = () => {
               <div className="text-sm text-slate-500">From: <span className="text-slate-800 font-medium">Acme Enterprise</span></div>
             </div>
 
-            <div className="max-w-xl mx-auto border border-border/30 rounded-xl p-8 shadow-sm">
+            <div className="max-w-xl mx-auto border border-border/30 rounded-xl p-8 shadow-sm text-slate-800">
               <h2 style={{ color: '#171717', fontSize: '20px', fontWeight: 'bold', marginBottom: '10px' }}>New quote request received</h2>
               <p style={{ color: '#666', fontSize: '14px', marginBottom: '20px' }}>A new request has been submitted via the website.</p>
               <hr style={{ border: '0', borderTop: '1px solid #eee', margin: '20px 0' }} />

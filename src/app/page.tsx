@@ -28,7 +28,8 @@ export default function LandingPage() {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         {/* Hero Section */}
-        <div className="text-center mb-24 animate-in fade-in slide-in-from-bottom-8 duration-700">
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-accent/10 rounded-full blur-[120px] pointer-events-none -z-10" />
+        <div className="text-center mb-24 animate-in fade-in slide-in-from-bottom-8 duration-700 relative">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary text-primary font-bold text-sm mb-6 border border-border/50">
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
@@ -37,14 +38,14 @@ export default function LandingPage() {
             Ensure Compliance Today
           </div>
           <h1 className="text-5xl md:text-6xl font-black text-primary mb-6 tracking-tight leading-tight">
-            Enterprise-Grade <span className="text-transparent-clip bg-gradient-to-r from-accent to-blue-500">Compliance Training</span>
+            Enterprise-Grade <span className="text-transparent-clip bg-gradient-to-r from-accent to-sky-400">Compliance Training</span>
           </h1>
           <p className="text-xl text-foreground/70 max-w-3xl mx-auto font-medium leading-relaxed">
             Secure your workforce with certified courses in Corporate Risk, InfoSec, and Ethics. 
             Our platform provides end-to-end traceability and Zero-Trust verification.
           </p>
           <div className="mt-10 flex justify-center gap-4">
-            <a href="#quote" className="px-8 py-4 bg-primary text-primary-foreground font-bold rounded-xl hover:bg-primary/90 transition-all shadow-lg hover:shadow-xl text-lg flex items-center gap-2">
+            <a href="#quote" className="px-8 py-4 bg-accent text-white font-bold rounded-xl hover:bg-accent/90 transition-all shadow-lg shadow-accent/20 hover:shadow-accent/40 hover:-translate-y-1 text-lg flex items-center gap-2">
               Request B2B Quote
             </a>
             <a href="#courses" className="px-8 py-4 bg-secondary text-secondary-foreground font-bold rounded-xl hover:bg-secondary/80 transition-all shadow-md border border-border text-lg">
